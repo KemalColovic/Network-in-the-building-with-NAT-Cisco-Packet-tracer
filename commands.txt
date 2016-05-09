@@ -1,0 +1,205 @@
+Switch0 (prizemlje):
+Switch>enable
+Switch#configure terminal
+Switch(config)#vtp mode transparent
+Switch(config)#vlan 6
+Switch(config-vlan)#name studentskasluzba
+Switch(config-vlan)#exit
+Switch(config)#int range fa0/2-4
+Switch(config-if-range)#switchport mode access
+Switch(config-if-range)#switchport access vlan 6
+Switch(config-if-range)#no shutdown
+Switch(config-if-range)#exit
+Switch(config)#vlan 5
+Switch(config-vlan)#name SZRiSK
+Switch(config-vlan)#exit
+Switch(config)#int range fa0/5-10
+Switch(config-if-range)#switchport mode access
+Switch(config-if-range)#switchport access vlan 5
+Switch(config-if-range)#no shutdown
+Switch(config-if-range)#exit
+Switch(config)#int range fa0/1-2
+Switch(config-if-range)#switchport mode trunk
+Switch(config-if-range)#no shutdown
+Switch(config-if-range)#end
+Switch1 (prvi_sprat):
+Switch>enable
+Switch#configure terminal
+Switch(config)#vtp mode transparent
+Switch(config)#vlan 2
+Switch(config-vlan)#name laboratorije
+Switch(config-vlan)#exit
+Switch(config)#int range fa0/2-10
+Switch(config-if-range)#switchport mode access
+Switch(config-if-range)#switchport access vlan 2
+Switch(config-if-range)#no shutdown
+Switch(config-if-range)#exit
+Switch(config)#vlan 4
+Switch(config-vlan)#name nastavnickikabineti
+Switch(config-vlan)#exit
+Switch(config)#int range fa0/11-14
+Switch(config-if-range)#switchport mode access
+Switch(config-if-range)#switchport access vlan 4
+Switch(config-if-range)#no shutdown
+Switch(config-if-range)#exit
+Switch(config)#vlan 3
+Switch(config-vlan)#name rektorat
+Switch(config-vlan)#exit
+Switch(config)#int range fa0/15-19
+Switch(config-if-range)#switchport mode access
+Switch(config-if-range)#switchport access vlan 3
+Switch(config-if-range)#no shutdown
+Switch(config-if-range)#exit
+Switch(config)#int range fa0/1-2
+Switch(config-if-range)#switchport mode trunk
+Switch(config-if-range)#no shutdown
+	Core switch (prvi_sprat):
+Switch>en
+Switch#conf t
+Switch(config)#hostname Core
+Core (config)#int range fa 0/1 - 5
+Core (config-if-range)#switchport mode trunk
+Core (config-if-range)#exit
+Core (config)#vtp mode transparent
+Core (config)#int fa 0/6
+Core (config-if)#switchport mode access
+Core (config-if)#switchport access vlan 7
+Core (config)#int fa 0/7
+Core (config-if)#switchport mode access
+Core (config-if)#switchport access vlan 8
+Core (config-if)#exit
+
+
+
+Switch2 (drugi_sprat):
+Switch>enable
+Switch#configure terminal
+Switch(config)#vtp mode transparent
+Switch(config)#vlan 2
+Switch(config-vlan)#name laboratorije
+Switch(config-vlan)#exit
+Switch(config)#int range fa0/2-13
+Switch(config-if-range)#switchport mode access
+Switch(config-if-range)#switchport access vlan 2
+Switch(config-if-range)#no shutdown
+Switch(config-if-range)#exit
+Switch(config)#int range fa0/1-2
+Switch(config-if-range)#switchport mode trunk
+Switch(config-if-range)#no shutdown
+Switch4 (treæi_sprat):
+Switch>enable
+Switch#configure terminal
+Switch(config)#vtp mode transparent
+Switch(config)#vlan 4
+Switch(config-vlan)#name nastavnickikabineti
+Switch(config-vlan)#exit
+Switch(config)#int range fa0/2-11
+Switch(config-if-range)#switchport mode access
+Switch(config-if-range)#switchport access vlan 4
+Switch(config-if-range)#no shutdown
+Switch(config-if-range)#exit
+Switch(config)#int range fa0/1-2
+Switch(config-if-range)#switchport mode trunk
+Switch(config-if-range)#no shutdown
+INTRouter:
+INTRouter>enable
+INTRouter#conf t
+INTRouter(config)#int fa0/1.2
+INTRouter(config-subif)#ip address 192.168.2.1 255.255.255.0
+INTRouter(config-subif)#encapsulation dot1q 2
+INTRouter(config-subif)#no shutdown
+INTRouter(config)#int fa0/1.3
+INTRouter(config-subif)#ip address 192.168.3.1 255.255.255.0
+INTRouter(config-subif)#encapsulation dot1q 3
+INTRouter(config-subif)#no shutdown
+INTRouter(config)#int fa0/1.4
+INTRouter(config-subif)#ip address 192.168.4.1 255.255.255.0
+INTRouter(config-subif)#encapsulation dot1q 4
+INTRouter(config-subif)#no shutdown
+INTRouter(config)#int fa0/1.5
+INTRouter(config-subif)#ip address 192.168.5.1 255.255.255.0
+INTRouter(config-subif)#encapsulation dot1q 5
+INTRouter(config-subif)#no shutdown
+INTRouter(config)#int fa0/1.6
+INTRouter(config-subif)#ip address 192.168.6.1 255.255.255.0
+INTRouter(config-subif)#encapsulation dot1q 6
+INTRouter(config-subif)#no shutdown
+INTRouter(config)#int fa0/1.7
+INTRouter(config-subif)#ip address 192.168.7.1 255.255.255.0
+INTRouter(config-subif)#encapsulation dot1q 7
+INTRouter(config-subif)#no shutdown
+INTRouter(config-subif)#exit
+INTRouter (config)#interface Serial0/0/0
+INTRouter (config-if)#clock rate 128000
+INTRouter (config-if)#ip address 192.168.9.1 255.255.255.0
+INTRouter (config)#ip route 0.0.0.0 0.0.0.0 se 0/0/0
+INTRouter (config)#access-list 130 deny ip any 192.168.4.0 0.0.0.255
+
+INTRouter (config)#access-list 130 deny ip any 192.168.2.0 0.0.0.255
+
+INTRouter (config)#access-list 130 permit ip any any
+
+INTRouter (config)#int fa0/0.3
+
+INTRouter (config-subif)#ip access-group 130 in
+
+INTRouter (config-subif)#exit
+Rektorat
+INTRouter (config)#access-list 120 permit ip any 92.187.130.0 0.0.0.255
+INTRouter (config)#access-list 120 deny ip any any
+
+INTRouter (config)#interface fastEthernet 0/0.2
+
+INTRouter (config-subif)#ip access-group 120 in
+
+INTRouter (config-subif)#exit
+Laboratorije
+INTRouter (config)#access-list 140 permit ip any 192.168.6.0 0.0.0.255
+INTRouter (config)#access-list 140 permit ip any 92.187.130.0 0.0.0.255
+
+INTRouter (config)#access-list 140 deny ip any any
+
+INTRouter (config)#interface fastEthernet 0/0.4
+
+INTRouter (config-subif)#ip access-group 140 in
+Nastavnièki kabineti
+INTRouter (config)#access-list 150 deny ip any 192.168.4.0 0.0.0.255
+INTRouter (config)#access-list 150 deny ip any 192.168.2.0 0.0.0.255
+
+INTRouter (config)#access-list 150 permit ip any any
+
+INTRouter (config)#interface fastEthernet 0/0.5
+
+INTRouter (config-subif)#ip access-group 150 in
+
+INTRouter (config-subif)#exit
+SZR
+INTRouter (config)#access-list 160 permit ip any 192.168.4.0 0.0.0.255
+INTRouter (config)#access-list 160 permit ip any 192.168.7.0 0.0.0.255
+INTRouter (config)#access-list 160 permit ip any 92.187.130.0  0.0.0.255
+
+INTRouter (config)#access-list 160 deny  ip any any
+
+INTRouter (config)#interface fastEthernet 0/0.6
+
+INTRouter (config-subif)#ip access-group 160 in
+
+INTRouter (config-subif)#exit 
+INTRouter (config)#exit
+INTRouter # copy running-config startup-config
+Studentska služba
+NATRouter:
+NATRouter>enable
+NATRouter #conf t
+NATRouter (config)#interface Serial0/0/0
+NATRouter (config-if)#no shutdown
+NATRouter (config-if)#shutdown
+NATRouter (config)#access-list 1 permit 192.168.0.0 0.0.255.255
+NATRouter (config)#int se 0/0/0
+NATRouter (config-if)#ip nat inside
+NATRouter (config-if)#no shutdown
+NATRouter (config-if)#ip add 92.187.130.1 255.255.255.252
+NATRouter (config-if)#exit
+NATRouter (config)#ip nat inside source list 1 interface fa 0/0 overload
+NATRouter (config)#ip route 0.0.0.0 0.0.0.0 se 0/0/0
+NATRouter# copy running-config startup-config
